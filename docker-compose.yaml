@@ -13,7 +13,7 @@ services:
       - "+server.port"
       - "28015"
       - "+server.hostname"
-      - "${SERVER_NAME}"
+      - "RustServer"
       - "+server.maxplayers"
       - "10"
       - "+server.worldsize"
@@ -23,38 +23,38 @@ services:
       - "+server.seed"
       - "666"
       - "+server.identity"
-      - "${SERVER_NAME}"
+      - "RustServer"
       - "+rcon.ip"
       - "0.0.0.0"
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - "${RCON_PASSWORD:-rustpassword}"
+      - "rustpassword"
       - "+rcon.web"
       - "1"
       - "-logfile"
-      - "/var/log/rust-server-${SERVER_NAME}.log"
+      - "/var/log/rust-server.log"
     ports:
       - "28015:28015/udp"
       - "28016:28016/tcp"
     volumes:
       - type: volume
         source: server_identity
-        target: "/srv/rust/server/${SERVER_NAME}"
+        target: "/srv/rust/server/RustServer"
       - type: bind
         source: ./logs
         target: /var/log
         is_directory: true
     environment:
-      - SERVER_NAME=${SERVER_NAME:-RustServer}
-      - RCON_PASSWORD=${RCON_PASSWORD:-rustpassword}
-      # Coolify's magic environment variables
-      - SERVICE_FQDN_RUSTRCON
-      - SERVICE_FQDN_RUSTRCON_28016
+      - SERVER_NAME=RustServer
+      - RCON_PASSWORD=rustpassword
+      - COOLIFY_FQDN=${COOLIFY_FQDN}
+      - COOLIFY_URL=${COOLIFY_URL}
+      - COOLIFY_RESOURCE_UUID=${COOLIFY_RESOURCE_UUID}
     labels:
       - traefik.enable=true
       # Only RCON web interface can be proxied (when enabled)
-      - "traefik.http.routers.rust-rcon.rule=Host(`${SERVICE_FQDN_RUSTRCON}`)"
+      - "traefik.http.routers.rust-rcon.rule=Host(`${COOLIFY_FQDN}`)"
       - "traefik.http.routers.rust-rcon.entrypoints=http"
       - "traefik.http.services.rust-rcon.loadbalancer.server.port=28016"
       # Direct game port exposure is handled by the ports section
@@ -69,10 +69,10 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - "${RCON_PASSWORD:-rustpassword}"
+      - "rustpassword"
     environment:
-      - RCON_PASSWORD=${RCON_PASSWORD:-rustpassword}
+      - RCON_PASSWORD=rustpassword
 
 volumes:
   server_identity:
-    name: "rust-server-identity-${SERVER_NAME}" 
+    name: "rust-server-identity" 
