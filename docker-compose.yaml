@@ -48,6 +48,7 @@ services:
     environment:
       - SERVER_NAME=RustServer
       - RCON_PASSWORD=rustpassword
+      # Coolify's predefined variables
       - COOLIFY_FQDN=${COOLIFY_FQDN}
       - COOLIFY_URL=${COOLIFY_URL}
       - COOLIFY_RESOURCE_UUID=${COOLIFY_RESOURCE_UUID}

@@ -4,8 +4,7 @@ services:
   rust-server:
     image: "pfeiffermax/rust-game-server:latest"
     pull_policy: always
-    # Container name will be managed by Coolify
-    # container_name: "rust-server"
+    container_name: "rust-server"
     cpus: 2
     mem_limit: 16gb
     command:
@@ -30,7 +29,7 @@ services:
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - ${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
+      - ${RCON_PASSWORD}
       - "+rcon.web"
       - "0"
       - "-logfile"
@@ -43,22 +42,13 @@ services:
         source: server_identity
         target: "/srv/rust/server/${SERVER_NAME}"
       - type: bind
-        source: ./logs
+        source: /var/log/docker-compose/rust
         target: /var/log
-        is_directory: true
-    environment:
-      - SERVER_NAME=${SERVER_NAME:-RustServer}
-      - RCON_PASSWORD=${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
-      - SERVICE_FQDN_RUSTSERVER
-    labels:
-      - traefik.enable=true
-      - "traefik.http.routers.rust-server.rule=Host(`${SERVICE_FQDN_RUSTSERVER}`)"
-      - traefik.http.routers.rust-server.entryPoints=http
+    env_file: .env
 
   rcon-cli:
     image: "outdead/rcon:latest"
-    # Container name will be managed by Coolify
-    # container_name: "rcon-cli"
+    container_name: "rcon-cli"
     depends_on:
       - rust-server
     command:
@@ -66,9 +56,7 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - ${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
-    environment:
-      - RCON_PASSWORD=${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
+      - ${RCON_PASSWORD}
 
 volumes:
   server_identity:
