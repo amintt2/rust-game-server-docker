@@ -29,7 +29,7 @@ services:
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - "${RCON_PASSWORD}"
+      - "${RCON_PASSWORD:-password}"
       - "+rcon.web"
       - "0"
       - "-logfile"
@@ -38,9 +38,9 @@ services:
       - "28015:28015/udp"
       - "28016:28016/tcp"
     environment:
-      - SERVER_NAME=${SERVER_NAME:-Rust Server}
-      - RCON_PASSWORD=${SERVICE_PASSWORD_RUSTSERVER}
-      - SERVICE_FQDN_RUSTSERVER
+      - "SERVER_NAME=${SERVER_NAME:-Rust Server}"
+      - "RCON_PASSWORD=${RCON_PASSWORD:-password}"
+      - "SERVICE_FQDN_RUSTSERVER"
     volumes:
       - type: volume
         source: server_identity
@@ -60,9 +60,9 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - "${SERVICE_PASSWORD_RUSTSERVER}"
+      - "${RCON_PASSWORD:-password}"
     environment:
-      - RCON_PASSWORD=${SERVICE_PASSWORD_RUSTSERVER}
+      - "RCON_PASSWORD=${RCON_PASSWORD:-password}"
 
 volumes:
   server_identity:
