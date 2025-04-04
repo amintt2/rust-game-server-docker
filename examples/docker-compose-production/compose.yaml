@@ -13,7 +13,7 @@ services:
       - "+server.port"
       - "28015"
       - "+server.hostname"
-      - ${SERVER_NAME:-Rust Server}
+      - "${SERVER_NAME:-Rust Server}"
       - "+server.maxplayers"
       - "10"
       - "+server.worldsize"
@@ -23,13 +23,13 @@ services:
       - "+server.seed"
       - "666"
       - "+server.identity"
-      - ${SERVER_NAME:-Rust Server}
+      - "${SERVER_NAME:-Rust Server}"
       - "+rcon.ip"
       - "0.0.0.0"
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - ${RCON_PASSWORD}
+      - "${RCON_PASSWORD}"
       - "+rcon.web"
       - "0"
       - "-logfile"
@@ -60,7 +60,7 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - ${SERVICE_PASSWORD_RUSTSERVER}
+      - "${SERVICE_PASSWORD_RUSTSERVER}"
     environment:
       - RCON_PASSWORD=${SERVICE_PASSWORD_RUSTSERVER}
 
