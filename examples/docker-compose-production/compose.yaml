@@ -13,7 +13,7 @@ services:
       - "+server.port"
       - "28015"
       - "+server.hostname"
-      - ${SERVER_NAME}
+      - ${SERVER_NAME:-Rust Server}
       - "+server.maxplayers"
       - "10"
       - "+server.worldsize"
@@ -23,7 +23,7 @@ services:
       - "+server.seed"
       - "666"
       - "+server.identity"
-      - ${SERVER_NAME}
+      - ${SERVER_NAME:-Rust Server}
       - "+rcon.ip"
       - "0.0.0.0"
       - "+rcon.port"
@@ -33,18 +33,22 @@ services:
       - "+rcon.web"
       - "0"
       - "-logfile"
-      - "/var/log/rust-server-${SERVER_NAME}.log"
+      - "/var/log/rust-server-${SERVER_NAME:-Rust Server}.log"
     ports:
       - "28015:28015/udp"
       - "28016:28016/tcp"
+    environment:
+      - SERVER_NAME=${SERVER_NAME:-Rust Server}
+      - RCON_PASSWORD=${SERVICE_PASSWORD_RUSTSERVER}
+      - SERVICE_FQDN_RUSTSERVER
     volumes:
       - type: volume
         source: server_identity
-        target: "/srv/rust/server/${SERVER_NAME}"
+        target: "/srv/rust/server/${SERVER_NAME:-Rust Server}"
       - type: bind
         source: /var/log/docker-compose/rust
         target: /var/log
-    env_file: .env
+        is_directory: true
 
   rcon-cli:
     image: "outdead/rcon:latest"
@@ -56,8 +60,10 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - ${RCON_PASSWORD}
+      - ${SERVICE_PASSWORD_RUSTSERVER}
+    environment:
+      - RCON_PASSWORD=${SERVICE_PASSWORD_RUSTSERVER}
 
 volumes:
   server_identity:
-    name: "rust-server-identity-${SERVER_NAME}"
+    name: "rust-server-identity-${SERVER_NAME:-Rust Server}" 
