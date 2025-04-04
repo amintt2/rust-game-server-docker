@@ -13,7 +13,7 @@ services:
       - "+server.port"
       - "28015"
       - "+server.hostname"
-      - ${SERVER_NAME}
+      - "${SERVER_NAME}"
       - "+server.maxplayers"
       - "10"
       - "+server.worldsize"
@@ -23,13 +23,13 @@ services:
       - "+server.seed"
       - "666"
       - "+server.identity"
-      - ${SERVER_NAME}
+      - "${SERVER_NAME}"
       - "+rcon.ip"
       - "0.0.0.0"
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - ${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
+      - "${RCON_PASSWORD}"
       - "+rcon.web"
       - "1"
       - "-logfile"
@@ -47,9 +47,10 @@ services:
         is_directory: true
     environment:
       - SERVER_NAME=${SERVER_NAME:-RustServer}
-      - RCON_PASSWORD=${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
-      # We'll use RCON web interface with Traefik
-      - SERVICE_FQDN_RUSTRCON=/
+      - RCON_PASSWORD=${SERVICE_PASSWORD_RUST}
+      # Coolify's magic environment variables
+      - SERVICE_PASSWORD_RUST
+      - SERVICE_FQDN_RUSTRCON
       - SERVICE_FQDN_RUSTRCON_28016
     labels:
       - traefik.enable=true
@@ -69,9 +70,9 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - ${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
+      - "${RCON_PASSWORD}"
     environment:
-      - RCON_PASSWORD=${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
+      - RCON_PASSWORD=${SERVICE_PASSWORD_RUST}
 
 volumes:
   server_identity:
