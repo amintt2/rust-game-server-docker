@@ -29,7 +29,7 @@ services:
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - "${RCON_PASSWORD}"
+      - "${RCON_PASSWORD:-rustpassword}"
       - "+rcon.web"
       - "1"
       - "-logfile"
@@ -47,9 +47,8 @@ services:
         is_directory: true
     environment:
       - SERVER_NAME=${SERVER_NAME:-RustServer}
-      - RCON_PASSWORD=${SERVICE_PASSWORD_RUST}
+      - RCON_PASSWORD=${RCON_PASSWORD:-rustpassword}
       # Coolify's magic environment variables
-      - SERVICE_PASSWORD_RUST
       - SERVICE_FQDN_RUSTRCON
       - SERVICE_FQDN_RUSTRCON_28016
     labels:
@@ -70,9 +69,9 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - "${RCON_PASSWORD}"
+      - "${RCON_PASSWORD:-rustpassword}"
     environment:
-      - RCON_PASSWORD=${SERVICE_PASSWORD_RUST}
+      - RCON_PASSWORD=${RCON_PASSWORD:-rustpassword}
 
 volumes:
   server_identity:
