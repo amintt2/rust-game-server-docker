@@ -5,9 +5,8 @@ services:
     image: "pfeiffermax/rust-game-server:latest"
     pull_policy: always
     # Container name will be managed by Coolify
-    # container_name: "rust-server"
-    cpus: 2
-    mem_limit: 16gb
+    cpus: 4
+    mem_limit: 8gb
     command:
       - "+server.ip"
       - "0.0.0.0"
@@ -57,8 +56,6 @@ services:
 
   rcon-cli:
     image: "outdead/rcon:latest"
-    # Container name will be managed by Coolify
-    # container_name: "rcon-cli"
     depends_on:
       - rust-server
     command:
@@ -72,4 +69,4 @@ services:
 
 volumes:
   server_identity:
-    name: "rust-server-identity-${SERVER_NAME}"
+    name: "rust-server-identity-${SERVER_NAME}" 
