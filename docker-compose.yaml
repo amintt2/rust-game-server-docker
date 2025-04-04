@@ -31,7 +31,7 @@ services:
       - "+rcon.password"
       - ${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
       - "+rcon.web"
-      - "0"
+      - "1"
       - "-logfile"
       - "/var/log/rust-server-${SERVER_NAME}.log"
     ports:
@@ -48,11 +48,17 @@ services:
     environment:
       - SERVER_NAME=${SERVER_NAME:-RustServer}
       - RCON_PASSWORD=${RCON_PASSWORD:-${SERVICE_PASSWORD_RUSTSERVER}}
-      - SERVICE_FQDN_RUSTSERVER
+      # We'll use RCON web interface with Traefik
+      - SERVICE_FQDN_RUSTRCON=/
+      - SERVICE_FQDN_RUSTRCON_28016
     labels:
       - traefik.enable=true
-      - "traefik.http.routers.rust-server.rule=Host(`${SERVICE_FQDN_RUSTSERVER}`)"
-      - traefik.http.routers.rust-server.entryPoints=http
+      # Only RCON web interface can be proxied (when enabled)
+      - "traefik.http.routers.rust-rcon.rule=Host(`${SERVICE_FQDN_RUSTRCON}`)"
+      - "traefik.http.routers.rust-rcon.entrypoints=http"
+      - "traefik.http.services.rust-rcon.loadbalancer.server.port=28016"
+      # Direct game port exposure is handled by the ports section
+      # Do not proxy UDP game traffic through Traefik
 
   rcon-cli:
     image: "outdead/rcon:latest"

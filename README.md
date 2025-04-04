@@ -111,7 +111,8 @@ The `docker-compose.yaml` in the root directory is optimized for deployment on C
 
 - **Easy deployment**: Just point Coolify to this repository
 - **Automatic environment variable handling**: Coolify will detect and manage variables
-- **Traefik integration**: Automatically configured for web access
+- **Traefik integration**: Web-based RCON interface accessible through Coolify's reverse proxy
+- **Direct port access**: Game server UDP port (28015) is exposed directly
 
 ### Environment Variables
 
@@ -124,12 +125,21 @@ The `docker-compose.yaml` in the root directory is optimized for deployment on C
 2. Connect to this Git repository (use the root directory)
 3. Configure any custom environment variables if needed
 4. Deploy the resource
+5. Make sure the following ports are accessible from the internet:
+   - **28015/UDP**: The main Rust game server port
+   - **28016/TCP**: RCON interface port (if accessing directly, not through the web interface)
+
+### Networking in Coolify
+
+- The **game server** (UDP port 28015) is exposed directly and **not** through the reverse proxy
+- The **RCON web interface** is accessible through Coolify's Traefik proxy using the auto-generated domain
+- If your server is behind NAT, make sure to forward port 28015/UDP to your server
 
 ### Notes
 
 - Logs are stored in a `./logs` directory that will be automatically created
 - Server data is persisted in a Docker volume
-- The RCON interface is accessible via the port 28016
+- The RCON web interface is enabled by default (set by `+rcon.web 1`)
 
 ### Advanced Configuration
 
