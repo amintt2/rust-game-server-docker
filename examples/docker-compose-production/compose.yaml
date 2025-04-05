@@ -13,7 +13,7 @@ services:
       - "+server.port"
       - "28015"
       - "+server.hostname"
-      - "${SERVER_NAME:-Rust Server}"
+      - "Rust Server"
       - "+server.maxplayers"
       - "10"
       - "+server.worldsize"
@@ -23,28 +23,28 @@ services:
       - "+server.seed"
       - "666"
       - "+server.identity"
-      - "${SERVER_NAME:-Rust Server}"
+      - "Rust Server"
       - "+rcon.ip"
       - "0.0.0.0"
       - "+rcon.port"
       - "28016"
       - "+rcon.password"
-      - "${RCON_PASSWORD:-password}"
+      - "password"
       - "+rcon.web"
       - "0"
       - "-logfile"
-      - "/var/log/rust-server-${SERVER_NAME:-Rust Server}.log"
+      - "/var/log/rust-server.log"
     ports:
       - "28015:28015/udp"
       - "28016:28016/tcp"
     environment:
-      - "SERVER_NAME=${SERVER_NAME:-Rust Server}"
-      - "RCON_PASSWORD=${RCON_PASSWORD:-password}"
+      - "SERVER_NAME=Rust Server"
+      - "RCON_PASSWORD=password"
       - "SERVICE_FQDN_RUSTSERVER"
     volumes:
       - type: volume
         source: server_identity
-        target: "/srv/rust/server/${SERVER_NAME:-Rust Server}"
+        target: "/srv/rust/server/Rust Server"
       - type: bind
         source: /var/log/docker-compose/rust
         target: /var/log
@@ -60,10 +60,10 @@ services:
       - "--address"
       - "rust-server:28016"
       - "--password"
-      - "${RCON_PASSWORD:-password}"
+      - "password"
     environment:
-      - "RCON_PASSWORD=${RCON_PASSWORD:-password}"
+      - "RCON_PASSWORD=password"
 
 volumes:
   server_identity:
-    name: "rust-server-identity-${SERVER_NAME:-Rust Server}" 
+    name: "rust-server-identity-Rust Server" 
